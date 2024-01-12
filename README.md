@@ -7,6 +7,7 @@ This JavaScript library allows users to create "watchers" that observe a variabl
 ## Features
 
 - **Dynamic Watchers**: Create dynamic watchers with customizable conditions and callbacks.
+- **Multiple Conditions**: Each watcher can have multiple conditions. When any of these conditions are met, the corresponding callback is triggered.
 - **Proxy-based Variable (`cwv`)**: Utilize a proxy-based variable that automatically triggers associated watchers when its value changes.
 
 ## Getting Started
@@ -27,20 +28,32 @@ Create a watcher with specific conditions and callbacks.
 #### Parameters:
 
 - `options`: An object containing the following properties:
-  - `condition` (function): A function defining the condition for triggering the callback.
-  - `callback` (function): A function to execute when the condition is met.
-  - `variable` (optional): The variable to watch. If not provided, the watcher will observe the default variable created by `cwv`.
-  - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
+ - `condition` (function or array of functions): A function or an array of functions defining the conditions for triggering the callback.
+ - `callback` (function): A function to execute when all conditions are met.
+ - `variable` (optional): The variable to watch. If not provided, the watcher will observe the default variable created by `cwv`.
+ - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
 
 #### Example:
 
 ```javascript
-let watcher = new Watcher({
-  condition: val => val == 6,
-  callback: () => console.log("Value is equal to 6"),
-  variable: cwv(0, watchers),
+// Single condition
+let watcher1 = new Watcher({
+ condition: val => val == 6,
+ callback: () => console.log("Value is equal to 6"),
+ variable: cwv(0, watchers),
+});
+
+// Multiple conditions
+let watcher2 = new Watcher({
+ condition: [val => val > 5, val => val < 10],
+ callback: () => console.log("Value is between 5 and 10"),
+ watchersArray: watchers,
 });
 ```
+
+In the first example, the watcher has a single condition. When the value of the watched variable equals 6, the callback function is executed.
+
+In the second example, the watcher has multiple conditions. It uses an array of functions to define the conditions. The callback function is executed only when all conditions are met, i.e., when the value of the watched variable is greater than 5 and less than 10.
 
 ### `cwv(initialValue, watchersArray)`
 
@@ -69,19 +82,21 @@ Create watchers with different conditions and callbacks, then update variable va
 let variable1 = cwv("Initial Value", watchersArray)
 
 let watcher1 = new Watcher({
-  condition: val => val == 6,
-  callback: () => console.log("Value is equal to 6"),
-  variable: cwv(0, watchers),
+ condition: val => [val == 6, val == 8],
+ callback: () => console.log("Value is either 6 or 8"),
+ variable: cwv(0, watchers),
 });
 
 let watcher2 = new Watcher({
-  condition: val => val == 8,
-  callback: () => console.log("Value is equal to 8"),
-  watchersArray: watchers,
+ condition: val => [val == 10, val == 20],
+ callback: () => console.log("Value is either 10 or 20"),
+ watchersArray: watchers,
 });
 
-variable1.value = 6; // Logs: Value is equal to 6
-variable1.value = 8; // Logs: Value is equal to 8
+variable1.value = 6; // Logs: Value is either 6 or 8
+variable1.value = 8; // Logs: Value is either 6 or 8
+variable1.value = 10; // Logs: Value is either 10 or 20
+variable1.value = 20; // Logs: Value is either 10 or 20
 ```
 
 ## License
