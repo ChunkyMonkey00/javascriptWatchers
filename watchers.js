@@ -15,8 +15,22 @@ class Watcher {
     if (this.variable && this.variable !== variable) {
       return;
     }
-    if (this.condition(value)) {
+    if (Array.isArray(this.condition)) {
+      for (let condition of this.condition) {
+        if (condition(value)) {
+          this.callback();
+          break;
+        }
+      }
+    } else if (this.condition(value)) {
       this.callback();
+    }
+  }
+
+  remove() {
+    const index = this.watchersArray.indexOf(this);
+    if (index > -1) {
+      this.watchersArray.splice(index, 1);
     }
   }
 }
