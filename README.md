@@ -61,26 +61,13 @@ A proxy object representing the variable.
 let variable = cwv(0, watchers);
 ```
 
-### `checkCondition(value, variable)`
-
-Check the condition of a watcher.
-
-#### Parameters:
-
-- `value`: The current value of the variable.
-- `variable`: The variable being watched.
-
-#### Example:
-
-```javascript
-watcher.checkCondition(newVal, proxy);
-```
-
 ## Examples
 
 Create watchers with different conditions and callbacks, then update variable values to trigger watchers.
 
 ```javascript
+let variable1 = cwv("Initial Value", watchersArray)
+
 let watcher1 = new Watcher({
   condition: val => val == 6,
   callback: () => console.log("Value is equal to 6"),
@@ -93,8 +80,8 @@ let watcher2 = new Watcher({
   watchersArray: watchers,
 });
 
-watcher1.variable.value = 6; // Logs: Value is equal to 6
-watcher2.variable.value = 8; // Logs: Value is equal to 8
+variable1.value = 6; // Logs: Value is equal to 6
+variable1.value = 8; // Logs: Value is equal to 8
 ```
 
 ## License
