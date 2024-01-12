@@ -13,7 +13,7 @@ This JavaScript library allows users to create "watchers" that observe a variabl
 
 ### Setup
 
-Include the library in your project and set up an array to store watchers.
+Include the code from watchers.js in your project and (optionally) set up an array to store watchers.
 
 ```javascript
 // Setup
