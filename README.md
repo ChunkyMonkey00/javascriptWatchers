@@ -10,6 +10,10 @@ This JavaScript library allows users to create "watchers" that observe a variabl
 - **Multiple Conditions**: Each watcher can have multiple conditions. When any of these conditions are met, the corresponding callback is triggered.
 - **Proxy-based Variable (`cwv`)**: Utilize a proxy-based variable that automatically triggers associated watchers when its value changes.
 
+## Practical use
+
+When a program has a variable being modified a lot of times from many different sources, its between manually checking the variable each time its modified, or creating an interval that constantly checks the variable. With watchers, you dont need to use resources to constantly check the variable, or even manually check it. All of that is handled for you, and since it only checks when the variable is updated, resources are used much less.
+
 ## Getting Started
 
 ### Setup
