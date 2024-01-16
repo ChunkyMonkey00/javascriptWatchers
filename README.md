@@ -36,6 +36,7 @@ Create a watcher with specific conditions and callbacks.
  - `callback` (function): A function to execute when all conditions are met.
  - `variable` (optional): The variable to watch. If not provided, the watcher will observe the default variable created by `cwv`.
  - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
+ - `removeSelf` (optional): (number) The amount of triggers the watcher should perform before removing itself. Defaults to none.
 
 #### Example:
 
