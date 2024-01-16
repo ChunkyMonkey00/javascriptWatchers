@@ -73,18 +73,3 @@ function cwv(initialValue, watchersArray) {
   });
   return proxy;
 }
-
-//Create a watched value by assigning it to the function
-//No need to give it an initial value btw
-var myVar = cwv();
-var myVar2 = cwv();
-
-// Throws error, and since we defined an alias we can know which one it is
-let watcher1 = new Watcher({
-  condition: val => val == 6,
-  callback: () => console.log("Value is equal to 6"),
-  removeSelf: -1,
-  alis: "watcher number 1"
-});
-
-myVar.value = 6;
