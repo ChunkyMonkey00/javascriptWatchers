@@ -1,0 +1,3 @@
+List of upcoming features yippee!
+
+WATCHERS: condition (default: no), trigger if changed to same value?
