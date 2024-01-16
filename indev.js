@@ -239,3 +239,182 @@ let myWatcher = new Watcher({
 
 myVar.value.key1 = "Hi!"
 //#endregion
+
+
+
+/*
+//PROMPT:
+let watchers = [];
+
+class Watcher {
+  constructor(options) {
+    this.condition = options.condition;
+    this.callback = options.callback;
+    this.variable = options.variable;
+    this.watchersArray = options.watchersArray || watchers;
+    this.removeSelf = Number(options.removeSelf) || null;
+    this.alias = String(options.alias) || undefined;
+    this.tor = options.tor || false;
+    this.triggerOnReassign = typeof options.triggerOnReassign === 'boolean' ? options.triggerOnReassign : false; // Ensure triggerOnReassign is a boolean
+    this.callbackCount = 0;
+    this.watchersArray.push(this);
+  }
+
+  checkCondition(value, variable) {
+    if (this.variable && this.variable !== variable) {
+      return;
+    }
+
+    if (this.triggerOnReassign || value !== this.lastValue) {
+      if (Array.isArray(this.condition)) {
+        for (let condition of this.condition) {
+          if (condition(value)) {
+            this.callback();
+            this.callbackCount++;
+            break;
+          }
+        }
+      } else if (typeof (value) == "object") {
+        for (const [key, kvalue] of Object.entries(value)) {
+          if (this.condition(kvalue)) {
+            this.callback();
+            this.callbackCount++;
+          }
+        }
+      } else if (this.condition(value)) {
+        this.callback();
+        this.callbackCount++;
+      }
+    }
+
+    this.lastValue = value;
+
+    if (this.removeSelf !== null && !isNaN(this.removeSelf)) {
+      if (this.callbackCount === this.removeSelf) {
+        this.remove();
+      }
+      if (this.callbackCount > this.removeSelf) {
+        console.warn("Watcher removed late; Alias: " + this.alias + ";" + " expected: " + this.removeSelf + "; actual: " + this.callbackCount);
+        this.remove();
+      }
+    }
+  }
+
+  remove() {
+    const index = this.watchersArray.indexOf(this);
+    if (index > -1) {
+      this.watchersArray.splice(index, 1);
+    }
+  }
+}
+
+function cwv(initialValue, watchersArray) {
+  if (watchersArray == undefined) {
+    watchersArray = watchers;
+  }
+  let value = initialValue;
+  let proxy = new Proxy({}, {
+    get: function (target, prop) {
+      if (prop === 'value') {
+        if (typeof (prop) == "object") {
+          for (const [key, value] of Object.entries(object1)) {
+            for (var i = 0; i < watchersArray.length; i++) {
+              if (watchersArray.variable == key) {
+                return key;
+              }
+            }
+            console.log(`${key}: ${value}`);
+          }
+        }
+        return value;
+      }
+      if (prop in target) {
+        return target[prop];
+      }
+      target[prop] = new Proxy({}, this);
+      return target[prop];
+    },
+    set: function (target, prop, newVal) {
+      if (prop === 'value') {
+        value = newVal;
+        watchersArray.forEach(watcher => watcher.checkCondition(newVal, proxy));
+      }
+      if (!(prop in target)) {
+        target[prop] = new Proxy({}, this);
+      }
+      target[prop] = newVal;
+      return true;
+    }
+  });
+  return proxy;
+}
+
+//#region test1
+// Create a watched value by assigning it to the function
+var myVar = cwv();
+
+// Throws error, and since we defined an alias we can know which one it is
+let watcher1 = new Watcher({
+  condition: val => val == 6,
+  callback: () => console.log("Value is equal to 6"),
+  alias: "watcher number 1",
+  triggerOnReassign: false // Set to true if you want to trigger on reassign
+});
+
+myVar.value = 6; // This will trigger
+myVar.value = 6; // This will not trigger
+myVar.value = 7; // Change the variable (wont trigger)
+myVar.value = 6; // This will trigger
+//#endregion
+
+var subHolder = cwv();
+
+subHolder.value = {
+  key1: "no woah.",
+}
+
+let subScanner = new Watcher({
+  condition: val => val == "Woah!",
+  callback: () => console.log("Sup"),
+  variable: subHolder,
+  tor: true,
+});
+
+//Logs "Sup"
+subHolder.value = {
+  key1: "Woah!",
+}
+
+subHolder.value.key1 = "Woah!"; // should log "Sup", but doesnt.
+
+this proxy only updates and gets used if we modify the .value of a variable. I need it to update if we update keys in a var.value. EX: myVar.value = 6; should update and trigger both get and set of the proxy, but so should myVar.value.key1 = 6;
+
+Check out the below example for a template on how to handle nested objects and proxies:
+var validator = {
+  get(target, key) {
+    if (typeof target[key] === 'object' && target[key] !== null) {
+      return new Proxy(target[key], validator)
+    } else {
+      return target[key];
+    }
+  },
+  set (target, key, value) {
+    console.log(target);
+    console.log(key);
+    console.log(value);
+    return true
+  }
+}
+
+
+var person = {
+      firstName: "alfred",
+      lastName: "john",
+      inner: {
+        salary: 8250,
+        Proffesion: ".NET Developer"
+      }
+}
+var proxy = new Proxy(person, validator)
+proxy.inner.salary = 'foo'
+*/
