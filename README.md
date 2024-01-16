@@ -89,7 +89,7 @@ let variable1 = cwv("Initial Value", watchersArray)
 let watcher1 = new Watcher({
  condition: val => [val == 6, val == 8],
  callback: () => console.log("Value is either 6 or 8"),
- variable: cwv(0, watchers),
+ variable: variable1,
 });
 
 let watcher2 = new Watcher({
