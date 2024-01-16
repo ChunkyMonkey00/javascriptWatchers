@@ -148,3 +148,19 @@ let watcher1 = new Watcher({
 });
 
 myVar3.value = 6;
+
+// Create a watched value by assigning it to the function
+var myVar4 = cwv();
+
+// Throws error, and since we defined an alias we can know which one it is
+let watcher1 = new Watcher({
+  condition: val => val == 6,
+  callback: () => console.log("Value is equal to 6"),
+  alias: "watcher number 1",
+  tor: false // Set to true if you want to trigger on reassign
+});
+
+myVar4.value = 6; // This will trigger
+myVar4.value = 6; // This will not trigger
+myVar4.value = 7; // Change the variable (wont trigger)
+myVar4.value = 6; // This will trigger
