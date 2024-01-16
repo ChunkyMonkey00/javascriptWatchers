@@ -45,7 +45,7 @@ Create a watcher with specific conditions and callbacks.
 let watcher1 = new Watcher({
  condition: val => val == 6,
  callback: () => console.log("Value is equal to 6"),
- variable: cwv(0, watchers),
+ variable: myVar,
 });
 
 // Multiple conditions
