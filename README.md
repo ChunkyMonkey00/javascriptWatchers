@@ -42,6 +42,7 @@ Create a watcher with specific conditions and callbacks.
 ##### Notes:
  - `removeSelf`: parses as number, failure occurs in the program ignoring this option
  - `alias`: defaults as undefined; parses as string, failure occurs in this alias being undefined
+ - If value is not changed, but reassigned the same value watchers WILL trigger.
 
 #### Example:
 
