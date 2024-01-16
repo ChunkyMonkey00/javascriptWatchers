@@ -37,6 +37,7 @@ Create a watcher with specific conditions and callbacks.
  - `variable` (optional): The variable to watch. If not provided, the watcher will observe all variables created by `cwv`.
  - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
  - `removeSelf` (optional): (number) The amount of triggers the watcher should perform before removing itself. Defaults to none.
+ - `alias` (optional): a string used to indicate a name for a watcher, useful for debugging. Any warns or error will include the alias.
 
 #### Example:
 
