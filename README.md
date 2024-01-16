@@ -75,7 +75,7 @@ Create a proxy-based variable (`cwv`) that automatically triggers associated wat
 - `watchersArray` (optional): An array to store watchers associated with the variable. Defaults to a global array if not provided.
 
 ##### Notes:
-Upon initialization of a variable's value, watchers WILL trigger if conditions are met.
+Upon initialization of a variable's value, watchers will NOT trigger if conditions are met.
 
 #### Returns:
 
