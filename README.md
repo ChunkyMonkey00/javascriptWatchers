@@ -34,7 +34,7 @@ Create a watcher with specific conditions and callbacks.
 - `options`: An object containing the following properties:
  - `condition` (function or array of functions): A function or an array of functions defining the conditions for triggering the callback.
  - `callback` (function): A function to execute when all conditions are met.
- - `variable` (optional): The variable to watch. If not provided, the watcher will observe the default variable created by `cwv`.
+ - `variable` (optional): The variable to watch. If not provided, the watcher will observe all variables created by `cwv`.
  - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
  - `removeSelf` (optional): (number) The amount of triggers the watcher should perform before removing itself. Defaults to none.
 
