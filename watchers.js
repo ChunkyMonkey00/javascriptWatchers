@@ -8,6 +8,8 @@ class Watcher {
     this.callback = options.callback;
     this.variable = options.variable;
     this.watchersArray = options.watchersArray || watchers;
+    this.removeSelf = options.removeSelf || null;
+    this.callbackCount = 0;
     this.watchersArray.push(this);
   }
 
@@ -19,11 +21,23 @@ class Watcher {
       for (let condition of this.condition) {
         if (condition(value)) {
           this.callback();
+          this.callbackCount++;
           break;
         }
       }
     } else if (this.condition(value)) {
       this.callback();
+      this.callbackCount++;
+    }
+
+    if (this.removeSelf !== null) {
+      if (this.callbackCount === this.removeSelf) {
+        this.remove();
+      }
+      if (this.callbackCount > this.removeSelf) {
+        console.warn("Watcher removed late, expected: " + this.removeSelf + "; actual: " + this.callbackCount);
+        this.remove();
+      }
     }
   }
 
