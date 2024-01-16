@@ -9,6 +9,7 @@ class Watcher {
     this.variable = options.variable;
     this.watchersArray = options.watchersArray || watchers;
     this.removeSelf = Number(options.removeSelf) || null;
+    this.alias = String(options.alis) || undefined;
     this.callbackCount = 0;
     this.watchersArray.push(this);
   }
@@ -35,7 +36,7 @@ class Watcher {
         this.remove();
       }
       if (this.callbackCount > this.removeSelf) {
-        console.warn("Watcher removed late, expected: " + this.removeSelf + "; actual: " + this.callbackCount);
+        console.warn("Watcher removed late; Alias: " + this.alias + ";" + " expected: " + this.removeSelf + "; actual: " + this.callbackCount);
         this.remove();
       }
     }
