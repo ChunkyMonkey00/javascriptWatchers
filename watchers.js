@@ -8,7 +8,7 @@ class Watcher {
     this.callback = options.callback;
     this.variable = options.variable;
     this.watchersArray = options.watchersArray || watchers;
-    this.removeSelf = options.removeSelf || null;
+    this.removeSelf = Number(options.removeSelf) || null;
     this.callbackCount = 0;
     this.watchersArray.push(this);
   }
@@ -30,7 +30,7 @@ class Watcher {
       this.callbackCount++;
     }
 
-    if (this.removeSelf !== null) {
+    if (this.removeSelf !== null && !isNaN(this.removeSelf)) {
       if (this.callbackCount === this.removeSelf) {
         this.remove();
       }
