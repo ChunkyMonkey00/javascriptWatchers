@@ -9,8 +9,9 @@ class Watcher {
     this.variable = options.variable;
     this.watchersArray = options.watchersArray || watchers;
     this.removeSelf = Number(options.removeSelf) || null;
-    this.alias = String(options.alis) || undefined;
-    
+    this.alias = String(options.alias) || undefined;
+    this.tor = options.tor || false;
+    this.triggerOnReassign = typeof options.triggerOnReassign === 'boolean' ? options.triggerOnReassign : false; // Ensure triggerOnReassign is a boolean
     /* to be used by the program NOT YOU */
     this.callbackCount = 0;
     this.watchersArray.push(this);
@@ -20,18 +21,23 @@ class Watcher {
     if (this.variable && this.variable !== variable) {
       return;
     }
-    if (Array.isArray(this.condition)) {
-      for (let condition of this.condition) {
-        if (condition(value)) {
-          this.callback();
-          this.callbackCount++;
-          break;
+
+    if (this.triggerOnReassign || value !== this.lastValue) {
+      if (Array.isArray(this.condition)) {
+        for (let condition of this.condition) {
+          if (condition(value)) {
+            this.callback();
+            this.callbackCount++;
+            break;
+          }
         }
+      } else if (this.condition(value)) {
+        this.callback();
+        this.callbackCount++;
       }
-    } else if (this.condition(value)) {
-      this.callback();
-      this.callbackCount++;
     }
+
+    this.lastValue = value;
 
     if (this.removeSelf !== null && !isNaN(this.removeSelf)) {
       if (this.callbackCount === this.removeSelf) {
