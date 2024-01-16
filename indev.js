@@ -77,11 +77,16 @@ function cwv(initialValue, watchersArray) {
     get: function (target, prop) {
       if (prop === 'value') {
         if(typeof(prop) == "object") {
-          for(var i=0;i<prop.length;i++) {
-            for(var i=0;i<watchersArray.length;i++){
-              //if watcher array contains that value
-              if (watchersArray[i].variable === prop[i]){}
+          for (const [key, value] of Object.entries(object1)) {
+            for (var i=0;i<watchersArray.length;i++) {
+              //well, isnt this just checking if the value of the key 
+              // is the same? thats not good. We need to get the right
+              //var not just the right value.
+              if(watchersArray.variable == key) {
+                return key;
+              }
             }
+            console.log(`${key}: ${value}`);
           }
         }
         return value;
