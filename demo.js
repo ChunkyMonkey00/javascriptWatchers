@@ -136,3 +136,15 @@ myVar.value = "Wooh!";
 var2.value = 11; // Triggers condition
 var2.value = -11; // Triggers condition
 var2.value = 0.32; // Triggers condition
+
+var myVar3 = cwv();
+
+// Throws new warn in console, and since we defined an alias we can know which one it is
+let watcher1 = new Watcher({
+  condition: val => val == 6,
+  callback: () => console.log("Value is equal to 6"),
+  removeSelf: -1,
+  alis: "watcher number 1"
+});
+
+myVar3.value = 6;
