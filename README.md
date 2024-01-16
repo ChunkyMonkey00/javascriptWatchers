@@ -38,11 +38,11 @@ Create a watcher with specific conditions and callbacks.
  - `watchersArray` (optional): An array to store the created watchers. Defaults to a global array if not provided.
  - `removeSelf` (optional): (number) The amount of triggers the watcher should perform before removing itself. Defaults to none.
  - `alias` (optional): a string used to indicate a name for a watcher, useful for debugging. Any warns or error will include the alias.
+ - `triggerOnReassign` (optional): a boolean, will the watcher trigger if the variable isn't changed, but reassigned? Default false.
 
 ##### Notes:
  - `removeSelf`: parses as number, failure occurs in the program ignoring this option
  - `alias`: defaults as undefined; parses as string, failure occurs in this alias being undefined
- - If value is not changed, but reassigned the same value watchers WILL trigger.
 
 #### Example:
 
