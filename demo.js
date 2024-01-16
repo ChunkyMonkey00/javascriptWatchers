@@ -68,6 +68,71 @@ let watcher6 = new Watcher({
   variable: var2
 });
 
+/* REMOVE SELF UPDATE */
+
+//Create a watched value by assigning it to the function
+//No need to give it an initial value btw
+var myVar = cwv();
+
+//Assign value by using .value method
+myVar.value = "Hi!";
+
+//Create a watcher
+new Watcher({
+  condition: val => val == "Bye!",
+  callback: () => console.log("They left :("),
+});
+
+//Will trigger the watcher above
+myVar.value = "Bye!";
+
+//If you intend on removing the watcher (always a good practice)
+//Use a variable and assign the new watcher
+let newWatcher = new Watcher({
+  condition: val => val == "Hello!",
+  callback: () => console.log("They're back :)"),
+});
+
+myVar.value = "Hello!";
+
+//Removes the newWatcher
+newWatcher.remove();
+
+//Or you can specify how many calls it takes to remove itself
+let newWatcher2 = new Watcher({
+  condition: val => val == "Helloo!",
+  callback: () => console.log("They're pretty happy :)"),
+  removeSelf: 2,
+});
+
+//Removes the watcher BUT throws a warn (because watcher count)
+//starts at 0 and it should have removed itself at -1/
+let newWatcher3 = new Watcher({
+  condition: val => val == "Yippee!",
+  callback: () => console.log("They're REALLY happy :)"),
+  removeSelf: -1,
+});
+
+//Does not remove, since it cant parse as a number
+let newWatcher4 = new Watcher({
+  condition: val => val == "Wooh!",
+  callback: () => console.log("They're INSANELY happy :)"),
+  removeSelf: "ehe",
+});
+
+//Logs
+myVar.value = "Helloo!";
+//Does not log
+myVar.value = "Hello!";
+//Logs
+myVar.value = "Yippee!";
+//Does not log
+myVar.value = "Yippee!";
+//Logs
+myVar.value = "Wooh!";
+//Logs
+myVar.value = "Wooh!";
+
 var2.value = 11; // Triggers condition
 var2.value = -11; // Triggers condition
 var2.value = 0.32; // Triggers condition
