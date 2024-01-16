@@ -39,6 +39,10 @@ Create a watcher with specific conditions and callbacks.
  - `removeSelf` (optional): (number) The amount of triggers the watcher should perform before removing itself. Defaults to none.
  - `alias` (optional): a string used to indicate a name for a watcher, useful for debugging. Any warns or error will include the alias.
 
+##### Notes:
+ - `removeSelf`: parses as number, failure occurs in the program ignoring this option
+ - `alias`: defaults as undefined; parses as string, failure occurs in this alias being undefined
+
 #### Example:
 
 ```javascript
