@@ -79,3 +79,5 @@ function cwv(initialValue, watchersArray) {
   });
   return proxy;
 }
+
+module.exports = { Watcher, cwv };
