@@ -1,0 +1,19 @@
+{
+  "name": "variable-watcher-library",
+  "version": "1.0.0",
+  "description": "A JavaScript library for observing variable changes.",
+  "main": "watchers.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
