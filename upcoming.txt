@@ -1,3 +1,5 @@
 List of upcoming features yippee!
 
 sub value scanning (ex: myVar.value.thisKey)
+asynchronous support (allowing asynch calls like timing, fetch, etc...)
+chain support (cause functions look cooler when called with a ".")
