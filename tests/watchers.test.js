@@ -1,4 +1,4 @@
-const { Watcher, cwv } = require('./watchers');
+const { Watcher, cwv } = require('../watchers');
 
 test('Watcher triggers callback on condition', () => {
   let triggered = false;
