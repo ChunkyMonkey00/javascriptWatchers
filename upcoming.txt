@@ -1,5 +1,27 @@
 List of upcoming features yippee!
 
-sub value scanning (ex: myVar.value.thisKey)
-asynchronous support (allowing asynch calls like timing, fetch, etc...)
-chain support (cause functions look cooler when called with a ".")
+1. sub value scanning (ex: myVar.value.thisKey)
+
+2. asynchronous support (allowing asynch calls like timing, fetch, etc...):
+```
+let variable = cwv(0, watchers);
+
+let asyncWatcher = new Watcher({
+  condition: val => val > 5,
+  callback: async () => {
+    console.log("Async action started");
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate async task
+    console.log("Async action finished");
+  },
+  variable: variable,
+});
+
+variable.value = 6; // Logs: "Async action started" -> (2 seconds delay) -> "Async action finished"
+```
+
+3. chain support (cause functions look cooler when called with a "."):
+```
+let watcher = new Watcher({})
+  .setCondition(val => val === 10)
+  .setCallback(() => console.log("Chaining works!"));
+```
