@@ -1,42 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Health Monitor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Health Monitor - Variable Watcher Library Demo</title>
+	<style>
+		body {
+			font-family: 'Roboto', sans-serif;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+			background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+			color: #333;
+		}
 
-    #health {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+		h1 {
+			color: #1f1f1f;
+			font-size: 36px;
+			margin: 20px 0;
+			font-weight: bold;
+		}
 
-    button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px;
-      cursor: pointer;
-    }
+		#health {
+			font-size: 28px;
+			margin: 20px 0;
+			color: #ff6f61;
+			font-weight: bold;
+		}
 
-    button:hover {
-      background-color: #ddd;
-    }
-  </style>
+		button {
+			padding: 12px 24px;
+			font-size: 18px;
+			margin: 10px;
+			cursor: pointer;
+			border: none;
+			border-radius: 8px;
+			background: linear-gradient(135deg, #007bff, #00c6ff);
+			color: white;
+			font-weight: bold;
+			transition: background 0.3s, transform 0.2s;
+		}
+
+		button:hover {
+			background: linear-gradient(135deg, #0056b3, #0099cc);
+			transform: scale(1.05);
+		}
+
+		button:active {
+			transform: scale(0.98);
+		}
+
+		.info {
+			margin: 20px auto;
+			padding: 20px;
+			max-width: 800px;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.info h2 {
+			color: #1f1f1f;
+			font-size: 28px;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+
+		.info p {
+			font-size: 16px;
+			line-height: 1.6;
+			color: #555;
+		}
+
+		.info ul {
+			list-style-type: disc;
+			padding-left: 20px;
+			margin-top: 10px;
+		}
+
+		.info ul li {
+			margin-bottom: 10px;
+		}
+	</style>
 </head>
+
 <body>
 
-<p id='health'>Health: 100</p>
-<button onclick="toggleDrain()">Toggle auto drain</button>
-<button onclick="clickDrain()">Drain some health</button>
+	<h1>Health Monitor - Variable Watcher Library Demo</h1>
 
-<script>
-// Setup
+	<p id='health'>Health: 100</p>
+	<button onclick="toggleDrain()">Toggle Auto Drain</button>
+	<button onclick="clickDrain()">Drain Some Health</button>
 
+	<div class="info">
+		<h2>Variable Watcher Library</h2>
+		<p><strong>Overview:</strong> This JavaScript library allows users to create "watchers" that observe a variable,
+			triggering specified actions when certain conditions are met. Whether you want to monitor changes in a
+			variable's value or apply custom logic, this library empowers you to efficiently manage and respond to
+			dynamic data.</p>
+
+		<p><strong>Features:</strong></p>
+		<ul>
+			<li><strong>Dynamic Watchers:</strong> Create dynamic watchers with customizable conditions and callbacks.
+			</li>
+			<li><strong>Multiple Conditions:</strong> Each watcher can have multiple conditions. When any of these
+				conditions are met, the corresponding callback is triggered.</li>
+			<li><strong>Proxy-based Variable (cwv):</strong> Utilize a proxy-based variable that automatically triggers
+				associated watchers when its value changes.</li>
+		</ul>
+
+		<p><strong>Practical Use:</strong> When a program has a variable being modified many times from different
+			sources, you can either manually check the variable each time it's modified or create an interval that
+			constantly checks the variable. With watchers, you don't need to constantly check the variable or manually
+			verify it. All of that is handled automatically, using resources more efficiently.</p>
+	</div>
+
+	<script>
+		// Setup
 let watchers = [];
 
 class Watcher {
@@ -45,6 +126,9 @@ class Watcher {
     this.callback = options.callback;
     this.variable = options.variable;
     this.watchersArray = options.watchersArray || watchers;
+    this.removeSelf = options.removeSelf;
+    this.alias = options.alias;
+    this.triggerOnReassign = options.triggerOnReassign || false;
     this.watchersArray.push(this);
   }
 
@@ -56,11 +140,17 @@ class Watcher {
       for (let condition of this.condition) {
         if (condition(value)) {
           this.callback();
+          if (this.removeSelf) {
+            this.remove();
+          }
           break;
         }
       }
     } else if (this.condition(value)) {
       this.callback();
+      if (this.removeSelf) {
+        this.remove();
+      }
     }
   }
 
@@ -85,8 +175,10 @@ function cwv(initialValue, watchersArray) {
     },
     set: function (target, prop, newVal) {
       if (prop === 'value') {
-        value = newVal;
-        watchersArray.forEach(watcher => watcher.checkCondition(newVal, proxy));
+        if (value !== newVal || (watchersArray.length > 0 && watchersArray.find(w => w.triggerOnReassign))) {
+          value = newVal;
+          watchersArray.forEach(watcher => watcher.checkCondition(newVal, proxy));
+        }
       }
       return true;
     }
@@ -94,26 +186,29 @@ function cwv(initialValue, watchersArray) {
   return proxy;
 }
 
-//Test
-let health = cwv(200);
+// Test
+let health = cwv(100);
 let draining = true;
 
-let drainHealth = setInterval(function () { health.value -= 1;}, 100)
+let drainHealth = setInterval(function () { health.value -= 1; }, 100);
 
 let lowHealth = new Watcher({
   condition: val => val <= 20,
   callback: () => {
-    alert("Low health sir.");
-    health.value = 200;
+    alert("Low health! Restoring to 100.");
+    health.value = 100;
   },
-  variable: health
+  variable: health,
+  removeSelf: 1, // Removes after the first trigger
+  alias: "LowHealthWatcher"
 });
 
 let autoUpdatePage = new Watcher({
-  condition: val => val,
+  condition: val => true,
   callback: () => document.getElementById("health").innerHTML = "Health: " + health.value,
-  variable: health
-})
+  variable: health,
+  triggerOnReassign: true // Trigger on reassignments
+});
 
 function clickDrain() {
   health.value -= 10;
@@ -125,17 +220,12 @@ function toggleDrain() {
     draining = false;
     return;
   } else {
-    drainHealth = setInterval(function () { health.value -= 1;}, 100);
+    drainHealth = setInterval(function () { health.value -= 1; }, 100);
     draining = true;
   }
 }
-
-/*Practical use: when you have many sources modifying
-a variable and dont want to create a new function
-and have to call that function, or have an if check
-each time you change it.
-*/
-</script>
+	</script>
 
 </body>
+
 </html>
